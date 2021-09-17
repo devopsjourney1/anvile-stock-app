@@ -1,26 +1,35 @@
-from ._anvil_designer import Form1Template
-from anvil import *
-import anvil.google.auth, anvil.google.drive
+import anvil.google.auth, anvil.google.drive, anvil.google.mail
 from anvil.google.drive import app_files
-import anvil.server
 import anvil.tables as tables
 import anvil.tables.query as q
 from anvil.tables import app_tables
+import anvil.server
+import requests
 
 
-class Form1(Form1Template):
+# This is a server module. It runs on the Anvil server,
+# rather than in the user's browser.
+#
+# To allow anvil.server.call() to call functions here, we mark
+# them with @anvil.server.callable.
+# Here is an example - you can replace it with your own:
+#
+# @anvil.server.callable
+# def say_hello(name):
+#   print("Hello, " + name + "!")
+#   return 42
+#
 
-  def __init__(self, **properties):
-    # Set Form properties and Data Bindings.
-    self.init_components(**properties)
-    self.drop_down_stocks.items = anvil.server.call('getTickers')
+@anvil.server.callable
+def getTickers():
+    tickers = ['AAPL','TSLA','GME','AMC','BB']
+    #r = requests.get('https://finnhub.io/api/v1/stock/symbol?exchange=US&token=c520ad2ad3i9nnbv3hag')
+    #tickers = [stock['displaySymbol'] for stock in r.json()]
+    return tickers
 
-    # Any code you write here will run when the form opens.
 
-  def drop_down_1_change(self, **event_args):
-    """This method is called when an item is selected"""
-    #alert('you changed the ticker to ' + self.drop_down_1.selected_value)
-    ticker = self.drop_down_stocks.selected_value
-    self.tickerName.text = ticker
-    price = anvil.server.call('getPrice', ticker)
-    self.tickerPrice.text = price
+@anvil.server.callable
+def getPrice(ticker):
+   r = requests.get(f'https://finnhub.io/api/v1/quote?symbol={ticker}&token=c520ad2ad3i9nnbv3hag')
+   price = r.json()['c']
+   return price
