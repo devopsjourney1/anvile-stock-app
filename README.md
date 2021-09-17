@@ -1,4 +1,4 @@
-# Anvile-stock-app
+# Anvil-Stock-App
 A simple stock application MVP using Anvil
 
 
