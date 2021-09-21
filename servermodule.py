@@ -1,11 +1,8 @@
-import anvil.google.auth, anvil.google.drive, anvil.google.mail
-from anvil.google.drive import app_files
 import anvil.tables as tables
 import anvil.tables.query as q
 from anvil.tables import app_tables
 import anvil.server
 import requests
-
 
 # This is a server module. It runs on the Anvil server,
 # rather than in the user's browser.
@@ -22,14 +19,12 @@ import requests
 
 @anvil.server.callable
 def getTickers():
-    tickers = ['AAPL','TSLA','GME','AMC','BB']
-    #r = requests.get('https://finnhub.io/api/v1/stock/symbol?exchange=US&token=c520ad2ad3i9nnbv3hag')
-    #tickers = [stock['displaySymbol'] for stock in r.json()]
-    return tickers
+  tickers =['AAPL', 'TSLA', 'GME', 'AMC']
+  return tickers
 
 
 @anvil.server.callable
 def getPrice(ticker):
-   r = requests.get(f'https://finnhub.io/api/v1/quote?symbol={ticker}&token=c520ad2ad3i9nnbv3hag')
-   price = r.json()['c']
-   return price
+  r = requests.get(f'https://finnhub.io/api/v1/quote?symbol={ticker}&token=c520ad2ad3i9nnbv3hag')
+  price =  r.json()['c']
+  return price
